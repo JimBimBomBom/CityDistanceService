@@ -1,14 +1,24 @@
-CREATE DATABASE CityDistanceService;
-
+-- Create the CityDistanceService database
+CREATE DATABASE IF NOT EXISTS CityDistanceService;
 USE CityDistanceService;
 
-CREATE TABLE City (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    latitude DECIMAL(10, 8),
-    longitude DECIMAL(11, 8)
+-- Create the Cities table
+CREATE TABLE IF NOT EXISTS Cities (
+    CityId INT AUTO_INCREMENT PRIMARY KEY,
+    CityName VARCHAR(255) NOT NULL,
+    Latitude DECIMAL(9,6),  -- Format: DD.DDDDDD
+    Longitude DECIMAL(9,6)  -- Format: DD.DDDDDD
 );
 
-INSERT INTO City (name, latitude, longitude)
-VALUES  ('Bratislava', 48.148598, 17.107748),
-        ('Brno', 49.195061, 16.606836);
+-- Insert sample data into the Cities table only if the city does not already exist
+INSERT INTO Cities (CityName, Latitude, Longitude)
+SELECT * FROM (SELECT 'New York', 40.712776, -74.005974) AS tmp
+WHERE NOT EXISTS (
+    SELECT CityName FROM Cities WHERE CityName = 'New York'
+) LIMIT 1;
+
+INSERT INTO Cities (CityName, Latitude, Longitude)
+SELECT * FROM (SELECT 'Los Angeles', 34.052235, -118.243683) AS tmp
+WHERE NOT EXISTS (
+    SELECT CityName FROM Cities WHERE CityName = 'Los Angeles'
+) LIMIT 1;
